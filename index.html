@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>FF Club BD</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root{--primary:#3F51B5;--pl:#E8EAF6;--sec:#ff9800;--ok:#43A047;--bad:#D32F2F;--bg:#f5f6fa;--tx:#1d1b20;--wg:linear-gradient(135deg,#2b1055,#7597de)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none}
+input,textarea,select{user-select:text}
+body{font-family:'Lato','Hind Siliguri',sans-serif;background:var(--bg);color:var(--tx);padding-bottom:calc(90px + env(safe-area-inset-bottom));overflow-x:hidden;min-height:100vh}
+body.sub{padding-bottom:0}
+button{font-family:inherit;cursor:pointer;border:0}
+input,select{font-family:inherit;font-size:15px;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;margin:6px 0;background:#fff}
+.sec{display:none}.sec.on{display:block}
+.pad{padding:14px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 5px rgba(0,0,0,.1);padding:14px;margin-bottom:12px}
+.btn{display:block;width:100%;padding:13px;border-radius:30px;font-weight:800;text-transform:uppercase;color:#fff;background:var(--primary);margin-top:10px}
+#loader{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center}
+#loader i{width:50px;height:50px;border:5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sk{height:110px;border-radius:10px;margin:8px 0;background:linear-gradient(90deg,#e8e8e8 25%,#f4f4f4 37%,#e8e8e8 63%);background-size:800px 100%;animation:sh 1.4s infinite linear}
+@keyframes sh{0%{background-position:-400px 0}100%{background-position:400px 0}}
+/* auth */
+#auth{position:fixed;inset:0;z-index:5000;background:#101010;display:none;flex-direction:column;overflow:auto}
+#auth .top{height:35vh;min-height:200px;color:#fff;padding:60px 28px 0}
+#auth .top h1{font-size:34px;font-weight:900}#auth .top p{color:#999;margin-top:6px}
+#auth .box{flex:1;background:#fff;border-radius:30px 30px 0 0;padding:26px 24px calc(30px + env(safe-area-inset-bottom));min-height:65vh}
+#auth h2{margin-bottom:12px}
+.pw{position:relative}.pw i{position:absolute;right:14px;top:22px;color:#777}
+.chk{display:flex;gap:8px;font-size:13px;align-items:center;margin:8px 0}.chk input{width:auto;margin:0}
+.blk{background:#000}
+.lnk{color:#0091EA;font-weight:700;cursor:pointer}
+/* nav */
+#tabbar{position:fixed;left:0;right:0;bottom:0;height:calc(65px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:#fff;display:flex;box-shadow:0 -2px 8px rgba(0,0,0,.12);z-index:100}
+#tabbar.hidden{display:none}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;font-size:10px;gap:3px}
+.tab .ic{width:60px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.tab img{width:24px;height:24px}
+.tab.act .ic{background:var(--pl)}.tab.act{font-weight:900}
+.back{position:sticky;top:0;z-index:50;background:#fff;display:flex;gap:14px;align-items:center;padding:15px;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.1);cursor:pointer}
+.back.dk{background:#000;color:#fff}
+#fab{position:fixed;right:20px;bottom:calc(80px + env(safe-area-inset-bottom));width:50px;height:50px;border-radius:50%;background:var(--pl);color:var(--primary);font-size:22px;box-shadow:0 3px 8px rgba(0,0,0,.25);z-index:90;transform:scale(0) translateY(20px);transition:.25s}
+#fab.show{transform:none}#fab:active{transform:scale(.9)}
+/* home */
+.bn{position:relative;padding-bottom:56.25%;overflow:hidden;background:#ddd}
+#bnTrack{position:absolute;inset:0;display:flex;transition:transform .5s}
+#bnTrack a{flex:0 0 100%}#bnTrack img{width:100%;height:100%;object-fit:cover;display:block}
+#dots{display:flex;justify-content:center;gap:5px;margin:8px 0}
+#dots i{width:7px;height:7px;border-radius:4px;background:#bbb}#dots i.on{width:20px;background:var(--sec)}
+.mq{overflow:hidden;white-space:nowrap;color:var(--sec);font-weight:800;padding:6px 0}
+.mq span{display:inline-block;padding-left:100%;animation:mq 15s linear infinite}
+@keyframes mq{to{transform:translateX(-100%)}}
+.ttl{text-align:center;text-transform:uppercase;font-weight:900;font-size:18px;margin:8px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:0 14px}
+.cc{background:#EEE;border:3px solid #546E7A;border-radius:10px;overflow:hidden;text-align:center;padding-bottom:8px}
+.cc img{width:100%;height:110px;object-fit:cover;display:block;margin-bottom:6px}.cc small{display:block;color:#555}
+.cc:active{transform:scale(.98)}
+.tabs{display:flex;background:#fff}.tabs button{flex:1;padding:13px;background:none;font-weight:700;border-bottom:3px solid transparent;color:#666}
+.tabs button.on{color:var(--primary);border-color:var(--primary)}
+/* match card */
+.mc{background:#fff;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,.1);margin:12px 14px;overflow:hidden}
+.mh{display:flex;gap:10px;padding:12px}.mh img{width:90px;height:55px;object-fit:cover;border-radius:6px}
+.mh b{display:block;font-size:14px}.mh small{color:#777}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 10px}
+.sg small{display:block;font-size:10px;color:#888;text-transform:uppercase}.sg b{font-size:13px}
+.jr{display:flex;align-items:center;gap:10px;padding:0 12px 10px}.jr>div{flex:1}
+.pb{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden}.pb i{display:block;height:100%;background:linear-gradient(90deg,#66BB6A,#2E7D32)}
+.jr small{font-size:11px;color:#666;display:flex;justify-content:space-between}
+.jb{border:2px solid var(--primary);color:var(--primary);background:#fff;padding:7px 20px;border-radius:6px;font-weight:700}
+.jb:disabled{background:#ddd;border-color:#ddd;color:#777}
+.ob{display:flex;gap:8px;padding:0 12px 12px}.ob button{flex:1;background:#fff;border:1.5px solid #1565C0;color:#1565C0;border-radius:6px;padding:7px;font-weight:700;font-size:12px}
+.ft{background:#388E3C;color:#fff;padding:8px;text-align:center;font-weight:700;font-size:13px}
+.empty{text-align:center;color:#777;padding:40px 14px}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13px}th{background:#000;color:#fff;padding:8px;text-align:left}td{padding:8px;border-bottom:1px solid #eee}
+.bnr{background:#3F51B5;color:#fff;text-align:center;padding:10px;font-weight:800;margin-top:12px;border-radius:6px 6px 0 0}
+/* modal */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;align-items:center;justify-content:center;padding:20px}
+.mb{background:#fff;border-radius:16px;width:100%;max-width:360px;position:relative;overflow:hidden}
+.mb .hd{background:#FFD54F;text-align:center;padding:18px 10px;font-weight:900}
+.mb .x{position:absolute;right:8px;top:8px;width:30px;height:30px;border-radius:50%;background:#fff;font-weight:900}
+.mb .bd{padding:16px;line-height:1.9}
+.big{font-size:22px;font-weight:900;display:flex;justify-content:space-between;align-items:center}
+.cpb{background:var(--primary);color:#fff;border-radius:6px;padding:5px 12px;font-size:12px}
+/* shop/profile/wallet */
+.pro{background:linear-gradient(135deg,var(--primary),#42a5f5);color:#fff;border-radius:0 0 20px 20px;padding:30px 16px 20px;text-align:center}
+.av{width:80px;height:80px;border-radius:50%;background:#fff;color:var(--primary);font-size:34px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.two{display:flex;justify-content:space-around;margin-top:14px}.two b{display:block;font-size:20px}
+.mi{display:flex;align-items:center;gap:14px;background:#fff;padding:14px;border-bottom:1px solid #eee}.mi img{width:26px}.mi span{flex:1;font-weight:600}
+.badge{background:red;color:#fff;border-radius:10px;padding:1px 7px;font-size:11px}
+.wc{background:var(--wg);color:#fff;border-radius:15px;padding:20px;position:relative}
+.wc .g{color:#FFD54F;font-weight:900}.wc h1{font-size:34px;margin:6px 0}
+.pmg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.pm{background:#fff;border:2px solid #ddd;border-radius:10px;padding:12px 4px;text-align:center;font-weight:900;position:relative}
+.pm.on{border-color:var(--primary);background:var(--pl)}
+.pbox{border-radius:12px;color:#fff;padding:14px;line-height:1.8;font-size:14px}
+.pbox input{background:rgba(0,0,0,.25);color:#fff;border:0}.pbox input::placeholder{color:#eee}
+.pbox .y{background:#FFEB3B;color:#000;padding:2px 6px;border-radius:4px}
+.tx{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;border-left:5px solid var(--bad);display:flex;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.tx.d{border-color:var(--ok)}
+.code{background:#FFCA28;border:2px dashed #000;border-radius:8px;text-align:center;font-size:26px;font-weight:900;padding:14px;margin:14px 0}
+.warn{border:1.5px dashed var(--sec);color:#e65100;padding:8px;border-radius:6px;font-size:13px;margin:10px 0}
+#jbar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#fff}
+#jbar .btn{background:#5E35B1;margin:0}
+</style>
+</head>
+<body>
+<div id="loader"><i></i></div>
+
+<!-- AUTH -->
+<div id="auth">
+ <div class="top"><h1>FF Club BD</h1><p id="aSub">Sign in to your account</p></div>
+ <div class="box">
+  <div id="vLogin">
+   <h2>Sign In</h2>
+   <input id="lEmail" type="email" placeholder="Email Address">
+   <div class="pw"><input id="lPass" type="password" placeholder="Password"><i class="fa-solid fa-eye-slash" onclick="eye('lPass',this)"></i></div>
+   <label class="chk"><input type="checkbox" id="lChk" checked> I agree to the Terms and Conditions and Privacy Policy</label>
+   <button class="btn blk" onclick="doLogin()">Sign In</button>
+   <p style="text-align:right;margin:12px 0"><span class="lnk" onclick="forgot()">Forget Password ?</span></p>
+   <p style="text-align:center">Im a new user <span class="lnk" onclick="authMode(1)">Register Now</span></p>
+  </div>
+  <div id="vReg" style="display:none">
+   <h2>Sign Up</h2>
+   <input id="rName" placeholder="UserName">
+   <input id="rEmail" type="email" placeholder="Email Address">
+   <input id="rPhone" type="number" placeholder="Mobile Number">
+   <div class="pw"><input id="rPass" type="password" placeholder="Password"><i class="fa-solid fa-eye-slash" onclick="eye('rPass',this)"></i></div>
+   <input id="rPromo" placeholder="Promo Code (Optional)">
+   <label class="chk"><input type="checkbox" id="rChk" checked> I agree to the Terms and Conditions and Privacy Policy</label>
+   <button class="btn blk" onclick="doReg()">Sign Up</button>
+   <p style="text-align:center;margin-top:14px">Already have an account <span class="lnk" onclick="authMode(0)">Sign in here</span></p>
+  </div>
+ </div>
+</div>
+
+<div id="app" hidden>
+<!-- HOME -->
+<section class="sec on" id="s-home">
+ <div class="bn"><div id="bnTrack"></div></div><div id="dots"></div>
+ <div class="mq"><span id="notice">Welcome to FF Club BD! Join matches and win big prizes.</span></div>
+ <div class="ttl">Free Fire</div>
+ <div class="grid" id="catGrid"></div>
+</section>
+<!-- CATEGORY -->
+<section class="sec" id="s-cat">
+ <div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Back to Home</div>
+ <div class="tabs" id="mtabs"><button data-f="Upcoming" class="on">Upcoming</button><button data-f="Ongoing">On-Going</button><button data-f="Finished">Result</button></div>
+ <div id="catList"></div>
+</section>
+<section class="sec" id="s-shop"><div class="pad"><div class="ttl">Shop</div></div><div class="grid" id="shopGrid"></div></section>
+<section class="sec" id="s-mymatches"><div class="pad"><div class="ttl">My Matches</div></div><div id="myList"></div></section>
+<section class="sec" id="s-result"><div class="pad"><div class="ttl">Match Results</div></div><div id="resList"></div></section>
+<!-- PROFILE -->
+<section class="sec" id="s-profile">
+ <div class="pro"><div class="av" id="pAv"></div><b id="pName"></b><div id="pMail" style="font-size:13px;opacity:.9"></div>
+  <div class="two"><div><b id="pDep">0</b>Deposit ৳</div><div><b id="pWin">0</b>Winnings ৳</div></div></div>
+ <div style="margin-top:14px">
+  <div class="mi" onclick="navigateSub('wallet')"><img src="https://img.icons8.com/?size=100&id=JeOIikeRv8rJ&format=png&color=000000"><span>My Wallet</span><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" onclick="navigateSub('edit')"><img src="https://img.icons8.com/?size=100&id=O6yJLWcR6TNz&format=png&color=000000"><span>Edit Profile</span><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" onclick="navigateSub('refer')"><img src="https://img.icons8.com/?size=100&id=mvX5rQmbiHy1&format=png&color=000000"><span>Refer &amp; Earn</span><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" onclick="navigateSub('history')"><img src="https://img.icons8.com/?size=100&id=TF9VCgblG6vy&format=png&color=000000"><span>All Transactions</span><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" onclick="navigateSub('notifications')"><img src="https://img.icons8.com/?size=100&id=ds3fC4MMLVI6&format=png&color=000000"><span>Notification</span><b class="badge" id="nBadge" style="display:none"></b><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" onclick="navigateSub('club')"><i class="fa-solid fa-circle-info" style="width:26px;font-size:22px;color:var(--primary)"></i><span>Club Info &amp; Rules</span><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" onclick="navigateSub('developer')"><img src="https://img.icons8.com/?size=100&id=Aiy01hWHN0hk&format=png&color=000000"><span>Developer</span><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="mi" style="color:var(--bad)" onclick="logout()"><i class="fa-solid fa-right-from-bracket" style="width:26px"></i><span>Logout</span></div>
+ </div>
+ <p style="text-align:center;color:#888;margin:16px">App Version 1.0.0</p>
+</section>
+<!-- WALLET -->
+<section class="sec" id="s-wallet">
+ <div class="back dk" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>My Wallet</div>
+ <div class="pad">
+  <div class="wc"><i class="fa-solid fa-credit-card" style="color:#FFD54F"></i> FF Club BD <span class="g">WALLET</span>
+   <div style="color:#FFEB3B;margin-top:14px;font-size:13px">Available Balance</div><h1>৳ <span id="wTot">0</span></h1><div style="text-align:right;font-weight:900">GAMING</div></div>
+  <div class="card" style="display:flex;text-align:center;margin-top:12px"><div style="flex:1"><i class="fa-solid fa-wallet" style="color:#1565C0"></i><small style="display:block">DEPOSITED</small><b id="wDep">0</b></div><div style="flex:1"><i class="fa-solid fa-trophy" style="color:#FFA000"></i><small style="display:block">WINNING</small><b id="wWin">0</b></div></div>
+  <div style="display:flex;gap:10px"><button class="btn" style="background:#5a4bda" onclick="navigateSub('addmoney')">Add Money</button><button class="btn" style="background:#00c853" onclick="navigateSub('withdraw')">Withdraw</button></div>
+  <h3 style="margin:18px 0 8px">Quick Actions</h3>
+  <div class="card" onclick="navigateSub('history')"><b>Transaction History</b><br><small>View all your transactions</small></div>
+  <h3 style="margin:18px 0 8px">Learn and Support</h3>
+  <div class="card" onclick="vid('how_to_add_money_link')"><b>How to add money?</b><br><small>কিভাবে টাকা অ্যাড করবেন</small></div>
+  <div class="card" onclick="vid('how_to_play_link')"><b>How to join a match?</b><br><small>কিভাবে ম্যাচে জয়েন করবেন</small></div>
+  <div class="card" onclick="vid('how_to_get_room_id_link')"><b>How to get Room ID?</b><br><small>কিভাবে রুম আইডি পাবেন</small></div>
+ </div>
+</section>
+<!-- ADD MONEY -->
+<section class="sec" id="s-addmoney">
+ <div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Add Money</div>
+ <div class="pad"><div class="pmg" id="pmg"></div><div id="pbox"></div><button class="btn" id="vbtn" onclick="verifyDeposit()">VERIFY</button></div>
+</section>
+<!-- WITHDRAW -->
+<section class="sec" id="s-withdraw">
+ <div class="back dk" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Withdraw Money</div>
+ <div class="pad">
+  <div class="card" style="text-align:center">Available Balance<h2>BDT <span id="wdBal">0</span></h2></div>
+  <div class="pmg" id="wmg"></div>
+  <div class="card"><b>Withdrawal Details</b><input id="wdNum" type="number" placeholder="Mobile Number"><input id="wdAmt" type="number" placeholder="Amount">
+  <p style="color:var(--bad);font-size:12px;font-weight:700">MINIMUM WITHDRAW 100 TK</p><button class="btn" style="background:#00c853" onclick="doWithdraw()">Withdraw Money</button></div>
+ </div>
+</section>
+<section class="sec" id="s-history"><div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Transactions</div><div class="pad" id="hList"></div></section>
+<section class="sec" id="s-notifications"><div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Notifications</div><div class="pad" id="nList"></div></section>
+<section class="sec" id="s-refer">
+ <div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Refer &amp; Earn</div>
+ <div style="background:#1d1b20;color:#fff;text-align:center;padding:24px 18px"><div class="av" style="background:#81D4FA"><i class="fa-solid fa-user-plus"></i></div><h3>REFER MORE TO EARN MORE!</h3>
+  <p style="font-size:13px;margin-top:8px">আপনি যখন কাউকে আপনার রেফার কোড দিয়ে রেফার করবেন তখন উক্ত ইউজার যদি প্রথমবার ১০০ টাকা বা তার বেশি ডিপোজিট করে তাহলে আপনি ১০ টাকা পাবেন</p></div>
+ <div class="pad" style="text-align:center"><b>YOUR PROMO CODE</b><div class="code" id="rCode" onclick="cp(this.textContent)"></div><button class="btn" onclick="cp($('rCode').textContent)">REFER NOW</button></div>
+</section>
+<section class="sec" id="s-edit">
+ <div class="back dk" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>My Profile</div>
+ <div class="pad"><div class="card"><b>Basic Details</b><input id="eU" placeholder="Username"><input id="eE" disabled><input id="eP" type="number" placeholder="Phone"></div>
+ <div class="card"><b>Password Change</b><input id="eC" type="password" placeholder="Current Password"><input id="eN" type="password" placeholder="New Password"><input id="eF" type="password" placeholder="Confirm Password"></div>
+ <button class="btn" onclick="saveProfile()">Change Password</button></div>
+</section>
+<section class="sec" id="s-developer">
+ <div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Developer</div>
+ <div class="pad"><div class="card"><h3>FF Club BD Team</h3><p style="margin:8px 0">আপনার নিজের টুর্নামেন্ট অ্যাপ বানাতে যোগাযোগ করুন।</p>
+ <p>✔ Firebase Realtime<br>✔ bKash / Nagad / Rocket<br>✔ Admin Panel<br>✔ Android WebView</p><a class="btn" href="https://t.me/ffclubbd" target="_blank" rel="noopener">Contact</a></div></div>
+</section>
+<!-- CLUB INFO -->
+<section class="sec" id="s-club">
+ <div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Club Info &amp; Rules</div>
+ <div style="background:#1c2036;color:#f4efe6;padding:28px 18px;border-bottom:5px solid var(--sec)">
+  <h2 style="font-size:30px;line-height:1.15">বাংলাদেশের <span style="color:var(--sec)">Free Fire</span> কম্পিটিশন</h2>
+  <p style="margin-top:8px;opacity:.85">Solo, Duo আর Squad ম্যাচে জয়েন করো, বিকাশ / নগদ / রকেটে এন্ট্রি ফি দাও, আর জিতে নাও ক্যাশ প্রাইজ।</p>
+  <button class="btn" style="background:var(--sec)" onclick="showTab('home')">ম্যাচ দেখো</button>
+ </div>
+ <div class="pad">
+  <div class="card"><h3>টুর্নামেন্টের নিয়ম</h3>
+   <ul style="padding-left:20px;margin-top:8px;line-height:1.9">
+    <li>শুধু মোবাইল প্লেয়াররা খেলতে পারবে, এমুলেটর নিষিদ্ধ।</li>
+    <li>হ্যাক, স্ক্রিপ্ট বা গ্লিচ ব্যবহার করলে স্থায়ীভাবে ব্যান।</li>
+    <li>সঠিক Free Fire UID ও ইন-গেম নাম দিতে হবে।</li>
+    <li>Room ID ও Password ম্যাচের ১০ মিনিট আগে দেওয়া হবে।</li>
+    <li>দেরিতে জয়েন করলে এন্ট্রি ফি ফেরত নেই।</li>
+    <li>সব সিদ্ধান্তে অ্যাডমিনের রায় চূড়ান্ত।</li>
+    <li>প্রাইজ ম্যাচ শেষের ২৪ ঘণ্টার মধ্যে ওয়ালেটে যোগ হবে।</li>
+   </ul></div>
+  <div class="card"><h3>সাধারণ প্রশ্ন</h3>
+   <details style="margin-top:8px"><summary style="font-weight:700">টাকা কতক্ষণে ভেরিফাই হয়?</summary><p style="color:#555">Transaction ID দিলে সাধারণত সাথে সাথেই অটো ভেরিফাই হয়ে যায়।</p></details>
+   <details style="margin-top:8px"><summary style="font-weight:700">ম্যাচ বাতিল হলে কী হবে?</summary><p style="color:#555">পুরো এন্ট্রি ফি ফেরত দেওয়া হবে।</p></details>
+   <details style="margin-top:8px"><summary style="font-weight:700">Squad হলে সবাইকে আলাদা পে করতে হবে?</summary><p style="color:#555">না, টিম লিডার একবারে পুরো টিমের ফি দিলেই হবে।</p></details>
+   <details style="margin-top:8px"><summary style="font-weight:700">কখন টাকা তুলতে পারব?</summary><p style="color:#555">উইনিং ব্যালেন্স কমপক্ষে ১০০ টাকা হলে Withdraw করা যায়।</p></details>
+  </div>
+  <div class="card" style="text-align:center"><h3>যোগাযোগ</h3><p style="color:#666;margin-top:4px">কোনো সমস্যা হলে সরাসরি জানাও।</p>
+   <button class="btn" onclick="openSupport()">সাপোর্টে মেসেজ করো</button></div>
+  <p style="text-align:center;color:#888;font-size:12px">© 2026 FF Club BD. এটি Garena-র অফিসিয়াল অ্যাপ নয়।</p>
+ </div>
+</section>
+<!-- DETAIL -->
+<section class="sec" id="s-detail"><div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Match Details</div><div class="pad" id="dBody"></div></section>
+<!-- JOIN -->
+<section class="sec" id="s-join">
+ <div class="back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i>Match Joining</div>
+ <div class="pad" id="jBody" style="padding-bottom:90px"></div>
+ <div id="jbar"><button class="btn" onclick="doJoin()">Join Now!</button></div>
+</section>
+</div>
+
+<nav id="tabbar" class="hidden">
+ <button class="tab" data-t="shop" onclick="showTab('shop')"><span class="ic"><img src="https://img.icons8.com/?size=100&id=x5pyLTwajYMT&format=png&color=000000"></span>Shop</button>
+ <button class="tab act" data-t="home" onclick="showTab('home')"><span class="ic"><img src="https://img.icons8.com/?size=100&id=cdTzm4ndoVu4&format=png&color=000000"></span>Play</button>
+ <button class="tab" data-t="mymatches" onclick="showTab('mymatches')"><span class="ic"><img src="https://img.icons8.com/?size=100&id=qbPAZjbNRPIS&format=png&color=000000"></span>Matches</button>
+ <button class="tab" data-t="result" onclick="showTab('result')"><span class="ic"><img src="https://img.icons8.com/?size=100&id=MyHVj8kpSfdv&format=png&color=000000"></span>Result</button>
+ <button class="tab" data-t="profile" onclick="showTab('profile')"><span class="ic"><img src="https://img.icons8.com/?size=100&id=xyyjPRvu3CUP&format=png&color=000000"></span>Profile</button>
+</nav>
+<button id="fab" onclick="openSupport()"><i class="fa-brands fa-telegram"></i></button>
+<div id="modal"></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {getFirestore,collection,doc,onSnapshot,getDoc,getDocs,setDoc,addDoc,updateDoc,query,where,orderBy,writeBatch,increment} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile,signOut,sendPasswordResetEmail,EmailAuthProvider,reauthenticateWithCredential,updatePassword} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig={apiKey:"AIzaSyAE6YHUoxqU10131qMui_EEJfNCet-1wsU",authDomain:"gaming-1-5ecba.firebaseapp.com",projectId:"gaming-1-5ecba",storageBucket:"gaming-1-5ecba.firebasestorage.app",messagingSenderId:"472868291084",appId:"1:472868291084:web:f54dd42a8c2dc115bde429"};
+const app=initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
+
+// ---------- state ----------
+let currentUser=null,userData={},depositBal=0,winningBal=0,activeCategories=[],rawMatches=[],shopItems=[],notifs=[],settings={},
+ currentActiveCategory=null,currentMatchFilter='Upcoming',userJoinedMatches=new Set(),currentJoinId=null,currentEntryFee=0,
+ videoLinks={},supportLink='',currentPayMethod='bkash',allParticipants={},wMethod='bkash',curMatch=null,cur='home';
+const loaded={},stk=[];let unUser=null,unHist=null,bi=0,bt=null,popped=false;
+
+// ---------- helpers ----------
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nl=s=>esc(s).replace(/\n/g,'<br>');
+const num=v=>Number(v)||0;
+const sw=o=>Swal.fire(o);
+const sk=n=>'<div class="sk"></div>'.repeat(n);
+const loader=on=>$('loader').style.display=on?'flex':'none';
+const now=()=>new Date().toLocaleString();
+const userRef=()=>doc(db,'users',currentUser.uid);
+const txRef=()=>doc(collection(db,'users',currentUser.uid,'transactions'));
+const modal=h=>{const m=$('modal');m.innerHTML=h;m.style.display='flex'};
+const closeModal=()=>$('modal').style.display='none';
+async function cp(t){try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}sw({icon:'success',title:'Copied!',timer:1500,showConfirmButton:false})}
+
+// ---------- navigation ----------
+const SUB=['club','wallet','addmoney','withdraw','history','notifications','refer','edit','developer','detail','join','cat'];
+const HOOK={cat:()=>renderCat(),detail:()=>renderDetail(),join:()=>renderJoin(),wallet:()=>renderMoney(),addmoney:()=>renderPay(),withdraw:()=>renderWd(),history:()=>loadHistory(),notifications:()=>renderNotifs(),refer:()=>$('rCode').textContent=userData.referCode||'',edit:()=>{$('eU').value=userData.username||'';$('eE').value=currentUser.email||'';$('eP').value=userData.phone||''}};
+function show(t,sub,back){
+  if(!back&&t!==cur)history.pushState({t},'');
+  if(!back&&!sub)stk.length=0;
+  if(!back&&sub&&t!==cur)stk.push(cur);
+  loader(true);
+  if(t==='mymatches')$('myList').innerHTML=sk(2);
+  if(t==='result')$('resList').innerHTML=sk(2);
+  setTimeout(()=>{
+    document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id==='s-'+t));
+    document.body.classList.toggle('sub',sub);
+    $('tabbar').classList.toggle('hidden',sub);
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('act',b.dataset.t===t));
+    $('fab').classList.toggle('show',t==='home');
+    cur=t;(HOOK[t]||(()=>{}))();renderLists();window.scrollTo(0,0);loader(false);
+  },500);
+}
+const showTab=t=>show(t,false);
+const navigateSub=t=>show(t,true);
+function back(t){show(t,SUB.includes(t),true)}
+window.onpopstate=()=>{if(!currentUser)return;if(SUB.includes(cur))back(stk.pop()||'home');else if(cur!=='home')back('home')};
+
+// ---------- auth ----------
+const authMode=r=>{$('vLogin').style.display=r?'none':'block';$('vReg').style.display=r?'block':'none';$('aSub').textContent=r?'Create an account':'Sign in to your account'};
+const eye=(id,i)=>{const e=$(id);e.type=e.type==='password'?'text':'password';i.classList.toggle('fa-eye');i.classList.toggle('fa-eye-slash')};
+async function doLogin(){
+  const e=$('lEmail').value.trim(),p=$('lPass').value;
+  if(!e||!p)return sw({icon:'warning',title:'Required',text:'Email ও Password দিন।'});
+  if(!$('lChk').checked)return sw({icon:'warning',title:'Terms',text:'শর্তাবলীতে সম্মত হতে হবে।'});
+  loader(true);try{await signInWithEmailAndPassword(auth,e,p)}catch(x){sw({icon:'error',title:'Login Failed',text:x.message})}finally{loader(false)}
+}
+async function forgot(){const e=$('lEmail').value.trim();if(!e)return sw({icon:'info',title:'Email দিন'});try{await sendPasswordResetEmail(auth,e);sw({icon:'success',title:'Email পাঠানো হয়েছে'})}catch(x){sw({icon:'error',title:'Error',text:x.message})}}
+async function doReg(){
+  const un=$('rName').value.trim(),em=$('rEmail').value.trim(),ph=$('rPhone').value.trim(),pw=$('rPass').value,pr=$('rPromo').value.trim();
+  if(!un||!em||!ph||!pw)return sw({icon:'warning',title:'Required',text:'সব তথ্য দিন।'});
+  if(pw.length<6)return sw({icon:'warning',title:'Password',text:'কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।'});
+  if(!$('rChk').checked)return sw({icon:'warning',title:'Terms',text:'শর্তাবলীতে সম্মত হতে হবে।'});
+  loader(true);
+  try{
+    const c=await createUserWithEmailAndPassword(auth,em,pw),u=c.user;
+    await updateProfile(u,{displayName:un});
+    let by='',bad=false;
+    if(pr){try{const q=await getDocs(query(collection(db,'users'),where('referCode','==',pr)));const d=q.docs.find(x=>x.id!==u.uid);if(d)by=d.id;else bad=true}catch{bad=true}}
+    await setDoc(doc(db,'users',u.uid),{username:un,email:em,phone:ph,deposit:0,winning:0,referCode:'FF'+u.uid.slice(0,6).toUpperCase(),referredBy:by,referBonusGiven:false});
+    if(bad)sw({icon:'info',title:'নোট',text:'প্রোমো কোডটি সঠিক নয়, তবে আপনার অ্যাকাউন্ট তৈরি হয়ে গেছে।',timer:2500,showConfirmButton:false});
+  }catch(x){sw({icon:'error',title:'Sign Up Failed',text:x.message})}finally{loader(false)}
+}
+async function logout(){const r=await sw({title:'Logout?',text:'Are you sure you want to logout?',icon:'question',showCancelButton:true});if(r.isConfirmed)signOut(auth)}
+
+onAuthStateChanged(auth,u=>{
+  currentUser=u;
+  if(u){
+    $('auth').style.display='none';$('app').hidden=false;
+    unUser?.();
+    unUser=onSnapshot(userRef(),s=>{
+      userData=s.data()||{};depositBal=num(userData.deposit);winningBal=num(userData.winning);
+      if(s.exists()&&!userData.referCode)updateDoc(userRef(),{referCode:'FF'+u.uid.slice(0,6).toUpperCase()}).catch(()=>{});
+      renderMoney();
+    });
+    calcJoined();showTab('home');
+  }else{
+    unUser?.();unUser=null;unHist?.();userData={};userJoinedMatches=new Set();cur='home';stk.length=0;
+    $('app').hidden=true;$('auth').style.display='flex';$('tabbar').classList.add('hidden');authMode(0);renderLists();
+  }
+});
+
+// ---------- realtime data ----------
+onSnapshot(collection(db,'categories'),s=>{activeCategories=s.docs.map(d=>({id:d.id,...d.data()}));loaded.c=1;renderLists()});
+onSnapshot(collection(db,'shop_items'),s=>{shopItems=s.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.active!==false).sort((a,b)=>num(a.order)-num(b.order));renderShop()});
+onSnapshot(collection(db,'matches'),s=>{rawMatches=s.docs.map(d=>({id:d.id,...d.data()}));loaded.m=1;renderLists()});
+onSnapshot(collection(db,'match_participants'),s=>{allParticipants={};s.docs.forEach(d=>{const p={id:d.id,...d.data()};(allParticipants[p.matchKey]=allParticipants[p.matchKey]||[]).push(p)});calcJoined();renderLists()});
+onSnapshot(collection(db,'notifications'),s=>{notifs=s.docs.map(d=>d.data()).reverse();loaded.n=1;const b=$('nBadge');b.textContent=notifs.length;b.style.display=notifs.length?'inline':'none';if(cur==='notifications')renderNotifs()});
+let popShown=false;
+onSnapshot(doc(db,'settings','app_settings'),s=>{
+  settings=s.data()||{};supportLink=settings.support_link||'';
+  videoLinks={how_to_add_money_link:settings.how_to_add_money_link,how_to_get_room_id_link:settings.how_to_get_room_id_link,how_to_play_link:settings.how_to_play_link};
+  $('notice').textContent=settings.notice||'Welcome to FF Club BD! Join matches and win big prizes.';
+  renderBanner();if(cur==='addmoney')renderPay();
+  if(!popShown&&settings.show_popup&&settings.popup_text){popShown=true;setTimeout(()=>modal(`<div class="mb"><div class="bd" style="text-align:center"><h3>আসসালামু আলাইকুম 😍</h3><p style="margin:10px 0">${nl(settings.popup_text)}</p><button class="btn" style="background:var(--sec)" onclick="closeModal()">Okay</button></div></div>`),1500)}
+});
+function calcJoined(){userJoinedMatches=new Set();if(!currentUser)return;Object.entries(allParticipants).forEach(([k,a])=>{if(a.some(p=>p.joinedBy===currentUser.uid))userJoinedMatches.add(k)})}
+
+// ---------- renderers ----------
+function renderBanner(){
+  const b=Object.values(settings.banners||{});bi=0;
+  $('bnTrack').style.transform='';
+  $('bnTrack').innerHTML=b.map(x=>`<a ${x.link?`href="${esc(x.link)}" target="_blank" rel="noopener"`:''}><img src="${esc(x.img)}" alt=""></a>`).join('');
+  $('dots').innerHTML=b.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('');
+  clearInterval(bt);
+  if(b.length>1)bt=setInterval(()=>{bi=(bi+1)%b.length;$('bnTrack').style.transform=`translateX(-${bi*100}%)`;document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===bi))},3000);
+}
+function renderHome(){
+  const g=$('catGrid');if(!loaded.c||!loaded.m){g.innerHTML=sk(4);return}
+  g.innerHTML=activeCategories.map(c=>{const n=rawMatches.filter(m=>m.categoryId===c.id&&m.status!=='Finished').length;
+    return `<div class="cc" onclick="openCategory('${esc(c.id)}')"><img src="${esc(c.img)}" alt=""><b>${esc(c.name).toUpperCase()}</b><small>${n} matches found</small></div>`}).join('');
+}
+function card(m,my){
+  const tot=num(m.total)||48,j=num(m.joined),left=Math.max(0,tot-j),fin=m.status==='Finished',isJ=userJoinedMatches.has(m.id),id=esc(m.id);
+  const c=activeCategories.find(x=>x.id===m.categoryId)||{};
+  const btn=fin?`<button class="jb" onclick="openDetail('${id}',event)">RESULT</button>`:(isJ||my)?`<button class="jb" disabled>JOINED</button>`:left<1?`<button class="jb" disabled>FULL</button>`:`<button class="jb" onclick="openJoin('${id}',event)">Join</button>`;
+  return `<div class="mc" onclick="openDetail('${id}')">
+  <div class="mh"><img src="${esc(c.img)}" alt=""><div><b>${esc(m.title)} | Mobile | Regular</b><small>${esc(m.time)}</small></div></div>
+  <div class="sg"><div><small>Win Prize</small><b>${esc(m.total_prize)} TK</b></div><div><small>Entry Type</small><b>${esc(m.type)}</b></div><div><small>Entry Fee</small><b>${esc(m.entry)} TK</b></div>
+  <div><small>Per Kill</small><b>${esc(m.per_kill)} TK</b></div><div><small>Map</small><b>${esc(m.map)}</b></div><div><small>Version</small><b>MOBILE</b></div></div>
+  <div class="jr"><div><div class="pb"><i style="width:${Math.min(100,j/tot*100)}%"></i></div><small><span>Only ${left} spots are left</span><span>${j}/${tot}</span></small></div>${btn}</div>
+  <div class="ob"><button onclick="showRoom('${id}',event)">🔑 Room Details ⌄</button>${fin?'':`<button onclick="showPrize('${id}',event)">🏆 Prize Details ⌄</button>`}</div>
+  ${fin?'':`<div class="ft"><i class="fa-regular fa-clock"></i> <span class="cd" data-t="${num(m.timestamp)}"></span></div>`}</div>`;
+}
+function renderCat(){
+  document.querySelectorAll('#mtabs button').forEach(b=>b.classList.toggle('on',b.dataset.f===currentMatchFilter));
+  if(!loaded.m){$('catList').innerHTML=sk(3);return}
+  const l=rawMatches.filter(m=>m.categoryId===currentActiveCategory&&m.status===currentMatchFilter);
+  $('catList').innerHTML=l.map(m=>card(m)).join('')||`<div class="empty">No ${currentMatchFilter==='Finished'?'Result':currentMatchFilter} Matches Found</div>`;tick();
+}
+function renderLists(){
+  renderHome();if(cur==='cat')renderCat();
+  if(loaded.m){
+    const my=rawMatches.filter(m=>userJoinedMatches.has(m.id)),rs=rawMatches.filter(m=>m.status==='Finished');
+    $('myList').innerHTML=!currentUser?'<div class="empty">Login to see matches</div>':my.map(m=>card(m,true)).join('')||'<div class="empty">No joined matches</div>';
+    $('resList').innerHTML=rs.map(m=>card(m)).join('')||'<div class="empty">No results yet</div>';
+  }
+  if(cur==='detail')renderDetail();if(cur==='join')renderJoin();tick();
+}
+function renderShop(){
+  $('shopGrid').innerHTML=shopItems.map(i=>`<div class="cc"><img src="${esc(i.img)}" alt=""><b>${esc(i.name)}</b><div style="color:var(--ok);font-weight:900">${esc(i.price)}</div>${i.link?`<a href="${esc(i.link)}" target="_blank" rel="noopener" style="display:inline-block;background:#1565C0;color:#fff;border-radius:6px;padding:5px 16px;margin-top:6px;text-decoration:none">কিনুন</a>`:''}</div>`).join('')
+  ||'<div class="empty" style="grid-column:1/-1"><i class="fa-solid fa-bag-shopping" style="font-size:40px"></i><p style="font-weight:700;margin-top:8px">শপে এখনো কোনো প্রোডাক্ট নেই</p><p>শীঘ্রই নতুন প্রোডাক্ট যুক্ত করা হবে, একটু পরে আবার চেক করুন</p></div>';
+}
+function renderMoney(){
+  const n=userData.username||currentUser?.displayName||'Player';
+  $('pAv').textContent=n[0].toUpperCase();$('pName').textContent=n;$('pMail').textContent=currentUser?.email||'';
+  $('pDep').textContent=depositBal;$('pWin').textContent=winningBal;$('wTot').textContent=depositBal+winningBal;$('wDep').textContent=depositBal;$('wWin').textContent=winningBal;$('wdBal').textContent=winningBal;
+}
+function tbl(rows){return `<table><tr><th>#</th><th>Player</th><th>Kills</th><th>Win</th></tr>${rows.map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.ign)}</td><td>${num(p.kills)}</td><td>${num(p.win)}</td></tr>`).join('')}</table>`}
+function renderDetail(){
+  const m=rawMatches.find(x=>x.id===curMatch);if(!m)return;const ps=allParticipants[m.id]||[],tot=num(m.total)||48;
+  $('dBody').innerHTML=m.status==='Finished'?
+   `<div class="card"><b>${esc(m.title)} | Mobile |</b><br><small>Organized On ${esc(m.time)}</small><div class="sg" style="padding:10px 0 0"><div><small>Win Prize</small><b>৳${esc(m.total_prize)}</b></div><div><small>Per Kill</small><b>৳${esc(m.per_kill)}</b></div><div><small>Entry Fee</small><b>৳${esc(m.entry)}</b></div></div></div>
+    <div class="bnr">WINNER WINNER CHICKEN DINNER</div>${ps.some(p=>num(p.win)>0)?tbl(ps.filter(p=>num(p.win)>0).sort((a,b)=>num(b.win)-num(a.win))):'<div class="empty card">No winners declared yet</div>'}
+    <div class="bnr">FULL RESULT</div>${ps.length?tbl(ps):'<div class="empty card">No participants</div>'}`:
+   `<div class="card"><b>${esc(m.title)}</b><div class="ft" style="margin-top:10px;border-radius:6px"><span class="cd" data-t="${num(m.timestamp)}"></span></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;font-weight:800;margin-bottom:8px"><span>Participants</span><span>${ps.length}/${tot}</span></div>${ps.length?tbl(ps):'No participants joined yet.'}</div>`;
+  tick();
+}
+function renderJoin(){
+  const m=rawMatches.find(x=>x.id===currentJoinId);if(!m)return;const n={Solo:1,Duo:2,Squad:4}[m.type]||1;
+  $('jBody').innerHTML=`<div class="card"><b>${esc(m.title)}</b><br><small>${esc(m.time)}</small><div style="display:flex;justify-content:space-between;margin:10px 0"><span>Win Prize: ${esc(m.total_prize)} TK</span><span>Entry Fee: ${esc(m.entry)} TK</span></div>
+  <div class="warn">*অবশ্যই এখানে আপনার গেমের এর নামটি দিয়ে জয়েন করবেন।</div><b>${esc(m.type)}</b>
+  ${Array.from({length:n},(_,i)=>`<input class="pn" placeholder="Player ${i+1} Name (Game ID)" maxlength="40">`).join('')}</div>`;
+}
+function renderNotifs(){$('nList').innerHTML=!loaded.n?sk(3):notifs.map(n=>`<div class="card"><b>${esc(n.title)}</b><p style="color:#666">${nl(n.body)}</p></div>`).join('')||'<div class="empty">No notifications</div>'}
+function loadHistory(){
+  $('hList').innerHTML=sk(4);unHist?.();
+  unHist=onSnapshot(query(collection(db,'users',currentUser.uid,'transactions'),orderBy('createdAt','desc')),s=>{
+    $('hList').innerHTML=s.docs.map(d=>{const t=d.data();return `<div class="tx ${String(t.type).includes('Deposit')?'d':''}"><div><b style="text-transform:uppercase">${esc(t.type)}</b><br><small>${esc(t.date)}</small><br>Won Amount : ${num(t.amount)}</div><div style="text-align:right"><b>#${esc(t.txID?String(t.txID).slice(0,4):'TRX')}</b><br><small>${esc(t.status)}</small></div></div>`}).join('')||'<div class="empty">No Transactions</div>';
+  });
+}
+
+// ---------- countdown ----------
+function tick(){document.querySelectorAll('.cd').forEach(e=>{const d=+e.dataset.t-Date.now();if(d<=0){e.textContent='Match Started';return}const s=Math.floor(d/1000);e.textContent=`Starts In: ${Math.floor(s/3600)}h:${Math.floor(s%3600/60)}m:${s%60}s`})}
+setInterval(tick,1000);
+
+// ---------- actions ----------
+function openCategory(id){currentActiveCategory=id;currentMatchFilter='Upcoming';navigateSub('cat')}
+$('mtabs').onclick=e=>{const b=e.target.closest('button');if(b){currentMatchFilter=b.dataset.f;renderCat()}};
+function openDetail(id,ev){ev?.stopPropagation();curMatch=id;navigateSub('detail')}
+function openJoin(id,ev){ev?.stopPropagation();const m=rawMatches.find(x=>x.id===id);if(!m)return;currentJoinId=id;currentEntryFee=num(m.entry);navigateSub('join')}
+function showPrize(id,ev){
+  ev.stopPropagation();const m=rawMatches.find(x=>x.id===id),t=num(m.total_prize);
+  modal(`<div class="mb"><button class="x" onclick="closeModal()">✕</button><div class="hd">TOTAL WINPRIZE<br>${esc(m.title)}</div><div class="bd">${m.prize_desc?nl(m.prize_desc):`👑 Winner: ${Math.floor(t*.4)} Taka<br>🥈 2nd: ${Math.floor(t*.2)} Taka<br>🥉 3rd: ${Math.floor(t*.1)} Taka<br>🏅 4th: 20 Taka<br>🏅 5th: 10 Taka<br>🔥 Per Kill: Based on Match<br>🏆 Total Prize Pool: ${t} Taka`}</div></div>`);
+}
+function showRoom(id,ev){
+  ev.stopPropagation();const m=rawMatches.find(x=>x.id===id);
+  if(!userJoinedMatches.has(id))return modal(`<div class="mb"><div class="bd" style="text-align:center"><i class="fa-solid fa-circle-info" style="font-size:36px;color:var(--sec)"></i><h3>ম্যাচে জয়েন করুন</h3><p>আপনি এই ম্যাচে জয়েন করেননি</p><button class="btn" style="background:var(--sec)" onclick="closeModal()">ঠিক আছে</button></div></div>`);
+  if(!m.room_id||String(m.room_id).length<2)return sw({icon:'info',title:'অপেক্ষা করুন',text:'ম্যাচ শুরু হওয়ার ১০ মিনিট আগে দেওয়া হবে',confirmButtonText:'ঠিক আছে'});
+  modal(`<div class="mb"><button class="x" onclick="closeModal()">✕</button><div class="hd">ROOM DETAILS<br><small>Match Room Information</small></div><div class="bd"><small>Room ID</small><div class="big">${esc(m.room_id)}<button class="cpb" data-c="${esc(m.room_id)}" onclick="cp(this.dataset.c)">COPY</button></div><small>Password</small><div class="big">${esc(m.room_pass)}<button class="cpb" data-c="${esc(m.room_pass)}" onclick="cp(this.dataset.c)">COPY</button></div></div></div>`);
+}
+async function doJoin(){
+  const m=rawMatches.find(x=>x.id===currentJoinId);if(!m)return;
+  const names=[...document.querySelectorAll('.pn')].map(i=>i.value.trim()),n=names.length,total=currentEntryFee*n;
+  if(userJoinedMatches.has(m.id))return sw({icon:'info',title:'Already Joined'});
+  if(names.some(x=>!x))return sw({icon:'warning',title:'Required',text:'সব প্লেয়ারের নাম দিন।'});
+  if(num(m.joined)+n>(num(m.total)||48))return sw({icon:'error',title:'Not enough spots'});
+  if(depositBal+winningBal<total)return sw({icon:'error',title:'Insufficient Balance',text:'আপনার ব্যালেন্স যথেষ্ট নয়।'});
+  const useD=Math.min(depositBal,total),nd=depositBal-useD,nw=winningBal-(total-useD);
+  loader(true);
+  try{
+    const b=writeBatch(db);
+    b.update(userRef(),{deposit:nd,winning:nw});
+    names.forEach(ign=>b.set(doc(collection(db,'match_participants')),{matchKey:m.id,ign,joinedBy:currentUser.uid,kills:0,win:0}));
+    b.update(doc(db,'matches',m.id),{joined:increment(n)});
+    b.set(txRef(),{type:'Match Join',amount:total,method:'Wallet',status:'Success',date:now(),createdAt:Date.now()});
+    await b.commit();loader(false);
+    await sw({icon:'success',title:'Joined!',text:'You have successfully joined the match.'});history.back();
+  }catch(x){sw({icon:'error',title:'Error',text:x.message})}finally{loader(false)}
+}
+const PM={bkash:{n:'bKash',c:'#E2136E',d:'#b00e56',u:'*247#',s:'Send Money/Make Payment'},rocket:{n:'Rocket',c:'#8C3494',d:'#6a2670',u:'*322#',s:'Send Money'},nagad:{n:'Nagad',c:'#F7941D',d:'#c97612',u:'*167#',s:'Send Money'}};
+const pmCards=(sel,fn)=>Object.entries(PM).map(([k,v])=>`<div class="pm ${k===sel?'on':''}" style="color:${v.c}" onclick="${fn}('${k}')">${v.n}${k===sel?' <i class="fa-solid fa-circle-check"></i>':''}</div>`).join('');
+function renderPay(){
+  const p=PM[currentPayMethod],N=p.n.toUpperCase(),no=settings[currentPayMethod+'_number']||'';
+  $('pmg').innerHTML=pmCards(currentPayMethod,'setPay');$('vbtn').style.background=p.c;
+  $('pbox').innerHTML=`<div class="pbox" style="background:${p.c}"><b>ট্রানজেকশন আইডি দিন</b><input id="trx" placeholder="Transaction ID" style="background:${p.d}">
+  <div>1. ${p.u} ডায়াল করে আপনার ${N} মোবাইল মেনুতে যান অথবা ${N} অ্যাপে যান ।</div><div class="y">2. ${p.s} - এ ক্লিক করুন ।</div>
+  <div>3. প্রাপক নম্বর হিসেবে নিচের এই নম্বরটি লিখুন<br><b>${esc(no)}</b> (Send Money) <button class="cpb" data-c="${esc(no)}" onclick="cp(this.dataset.c)">Copy</button></div>
+  <div>4. নিশ্চিত করতে এখন আপনার ${N} মোবাইল মেনু পিন লিখুন।</div><div>5. এখন উপরের বক্সে আপনার Transaction ID এবং Amount দিন আর নিচের VERIFY বাটনে ক্লিক করুন।</div></div>`;
+}
+const setPay=k=>{currentPayMethod=k;renderPay()};
+function renderWd(){$('wmg').innerHTML=pmCards(wMethod,'setWd')}
+const setWd=k=>{wMethod=k;renderWd()};
+async function verifyDeposit(){
+  const trx=$('trx').value.trim();if(!trx)return sw({icon:'warning',title:'Required',text:'Transaction ID দিন।'});
+  const key=trx.toLowerCase();loader(true);
+  try{
+    if((await getDoc(doc(db,'autoPay',key))).exists())return sw({icon:'error',title:'Error',text:'This TrxID has already been used!'});
+    const rec=(await getDocs(collection(db,'XNXANIKPAY'))).docs.find(d=>String(d.data().txid).toLowerCase()===key);
+    if(!rec)return sw({icon:'error',title:'Error',text:'Invalid TrxID.'});
+    const amt=num(rec.data().amount),b=writeBatch(db);
+    b.update(userRef(),{deposit:increment(amt)});
+    b.set(doc(db,'autoPay',key),{amount:amt,usedBy:currentUser.uid,time:Date.now()});
+    b.set(txRef(),{type:'Deposit (Auto)',amount:amt,method:PM[currentPayMethod].n,txID:trx,status:'Success',date:now(),createdAt:Date.now()});
+    await b.commit();
+    try{ // referral bonus must never block the deposit
+      if(amt>=100&&userData.referredBy&&!userData.referBonusGiven){
+        const r=writeBatch(db);
+        r.update(doc(db,'users',userData.referredBy),{deposit:increment(10)});
+        r.update(userRef(),{referBonusGiven:true});
+        r.set(doc(collection(db,'users',userData.referredBy,'transactions')),{type:'Referral Bonus',amount:10,method:'Referral',status:'Success',date:now(),createdAt:Date.now()});
+        await r.commit();
+      }
+    }catch(e){console.warn('referral',e)}
+    loader(false);await sw({icon:'success',title:'Successful!',text:`Successfully added ${amt} TK!`});
+    history.back();
+  }catch(x){sw({icon:'error',title:'Error',text:x.message})}finally{loader(false)}
+}
+async function doWithdraw(){
+  const no=$('wdNum').value.trim(),amt=num($('wdAmt').value);
+  if(!no||!amt)return sw({icon:'warning',title:'Required',text:'নম্বর ও পরিমাণ দিন।'});
+  if(amt<100)return sw({icon:'warning',title:'Minimum 100 TK'});
+  if(amt>winningBal)return sw({icon:'error',title:'Insufficient Winning Balance'});
+  loader(true);
+  try{
+    await addDoc(collection(db,'users',currentUser.uid,'transactions'),{type:'Withdraw',amount:amt,number:no,method:PM[wMethod].n,status:'Pending',date:now(),createdAt:Date.now()});
+    loader(false);await sw({icon:'success',title:'Request Sent',text:'আপনার উইথড্র রিকোয়েস্ট পেন্ডিং আছে।'});
+    $('wdNum').value=$('wdAmt').value='';history.back();
+  }catch(x){sw({icon:'error',title:'Error',text:x.message})}finally{loader(false)}
+}
+async function saveProfile(){
+  const un=$('eU').value.trim(),ph=$('eP').value.trim(),cpw=$('eC').value,np=$('eN').value,cf=$('eF').value;
+  if(!un)return sw({icon:'warning',title:'Username দিন'});
+  loader(true);
+  try{
+    if(un!==currentUser.displayName)await updateProfile(currentUser,{displayName:un});
+    await updateDoc(userRef(),{username:un,phone:ph});
+    if(np||cpw){
+      if(np!==cf)return sw({icon:'error',title:'Error',text:'Password মিলছে না।'});
+      if(np.length<6)return sw({icon:'error',title:'Error',text:'কমপক্ষে ৬ অক্ষর দিন।'});
+      await reauthenticateWithCredential(currentUser,EmailAuthProvider.credential(currentUser.email,cpw));
+      await updatePassword(currentUser,np);
+    }
+    $('eC').value=$('eN').value=$('eF').value='';sw({icon:'success',title:'Saved',text:'প্রোফাইল আপডেট হয়েছে।'});
+  }catch(x){sw({icon:'error',title:'Error',text:x.message})}finally{loader(false)}
+}
+function vid(k){const l=videoLinks[k];if(!l)return sw({icon:'info',title:'একটু অপেক্ষা করুন',text:'লিংক লোড হচ্ছে, আবার চেষ্টা করুন।'});window.open(l,'_blank')}
+function openSupport(){
+  if(!supportLink)return sw({icon:'info',title:'একটু অপেক্ষা করুন',text:'সাপোর্ট লিংক লোড হচ্ছে, আবার চেষ্টা করুন।'});
+  if(!window.open(supportLink,'_blank'))sw({icon:'warning',title:'Popup Blocked',text:'ব্রাউজার পপআপ ব্লক করেছে, ব্রাউজার সেটিংস চেক করুন।'});
+}
+history.replaceState({t:'home'},'');
+Object.assign(window,{showTab,navigateSub,authMode,eye,doLogin,doReg,forgot,logout,openCategory,openDetail,openJoin,showPrize,showRoom,doJoin,setPay,setWd,verifyDeposit,doWithdraw,saveProfile,vid,openSupport,cp,closeModal,$});
+</script>
+
+<!--
+==================== firestore.rules ====================
+Firebase Console > Firestore > Rules এ নিচের কোডটা কপি-পেস্ট করো (এটা HTML কোডের অংশ নয়, শুধু রেফারেন্স)।
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // Users: own doc only. Balances can NOT be edited from the client.
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid)
+        && request.resource.data.deposit == 0
+        && request.resource.data.winning == 0;
+      allow update: if isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['username', 'phone', 'referCode']);
+
+      match /transactions/{tid} {
+        allow read: if isOwner(uid);
+        // client may only create a Pending withdraw request
+        allow create: if isOwner(uid)
+          && request.resource.data.type == 'Withdraw'
+          && request.resource.data.status == 'Pending';
+      }
+    }
+
+    // Admin-managed, read-only for app users
+    match /categories/{id}    { allow read: if signedIn(); }
+    match /matches/{id}       { allow read: if signedIn(); }
+    match /settings/{id}      { allow read: if signedIn(); }
+    match /shop_items/{id}    { allow read: if signedIn(); }
+    match /notifications/{id} { allow read: if signedIn(); }
+
+    // Participants: read all (for result tables), create only as yourself
+    match /match_participants/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.joinedBy == request.auth.uid
+        && request.resource.data.kills == 0
+        && request.resource.data.win == 0;
+    }
+
+    // Payment records: never readable from the client
+    match /XNXANIKPAY/{id} { allow read, write: if false; }
+    match /autoPay/{id}    { allow read, write: if false; }
+  }
+}
+
+/*
+ IMPORTANT — move these to Cloud Functions (callable) for a secure production app:
+ 1. Join payment: deduct balance, add participants, increment matches.joined, log transaction.
+ 2. Deposit verification: read XNXANIKPAY, write autoPay, add to deposit, log transaction.
+ 3. Referral bonus: credit the referrer's deposit and set referBonusGiven.
+ 4. Withdraw approval: deduct winning balance (admin only).
+ With the rules above, the client-side versions of 1–3 in index.html will be
+ REJECTED by Firestore (users cannot edit deposit/winning). During testing you can
+ temporarily loosen the rules, but never ship that to production.
+*/
+
+-->
+</body>
+</html>
